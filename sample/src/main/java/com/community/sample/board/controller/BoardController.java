@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,8 +29,8 @@ public class BoardController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<BoardDTO> updateBoard(@RequestParam Long id, @RequestBody BoardDTO boardDTO) {
-        BoardDTO updatedBoard = boardService.updateBoard(id, boardDTO);
+    public ResponseEntity<BoardDTO> updateBoard(@RequestBody BoardDTO boardDTO) {
+        BoardDTO updatedBoard = boardService.updateBoard((long) boardDTO.getAuthorId(), boardDTO);
         return ResponseEntity.ok(updatedBoard);
     }
 
@@ -39,4 +40,11 @@ public class BoardController {
         boardService.deleteBoard(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<BoardDTO>> getAllBoards() {
+        List<BoardDTO> boardList = boardService.getAllBoards();
+        return ResponseEntity.ok(boardList);
+    }
+
 }

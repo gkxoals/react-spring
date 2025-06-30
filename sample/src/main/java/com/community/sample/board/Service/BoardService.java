@@ -9,6 +9,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +57,7 @@ public class BoardService {
         return toDTO(board);
     }
 
+    @Transactional
     public BoardDTO updateBoard(Long id, BoardDTO boardDTO) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found with id: " + id));
@@ -70,10 +75,18 @@ public class BoardService {
         Board updatedBoard = boardRepository.save(board);
         return toDTO(updatedBoard);
     }
-
+    @Transactional(readOnly = true)
     public void deleteBoard(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Board not found with id: " + id));
         boardRepository.delete(board);
     }
+    @Transactional(readOnly = true)
+    public List<BoardDTO> getAllBoards() {
+        return boardRepository.findAll()
+                .stream()
+                .map(BoardDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 }
