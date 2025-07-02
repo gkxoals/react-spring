@@ -1,5 +1,6 @@
 package com.community.sample.user.Service;
 
+import com.community.sample.config.Jwt.JwtUtil;
 import com.community.sample.user.DTO.UserLoginDTO;
 import com.community.sample.user.DTO.UserResponseDTO;
 import com.community.sample.user.DTO.UserSignupDTO;
@@ -41,13 +42,22 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치 하지 않습니다.");
         }
 
+// JWT 토큰 생성
+        String token = JwtUtil.createToken(
+                (long) user.getUser_Id(),   // int → Long으로 변환
+                user.getNickname(),
+                user.getRole().name()
+        );
+
         return new UserResponseDTO(
                 user.getUser_Id(),
                 user.getUsername(),
                 user.getNickname(),
                 user.getEmail(),
                 user.getRole(),
-                user.getCreatedAt());
+                user.getCreatedAt(),
+                token
+        );
     }
 
 

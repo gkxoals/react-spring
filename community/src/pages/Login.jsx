@@ -35,7 +35,8 @@ const { login } =useAuth();
       })
       .then(data => {
         alert('로그인 성공');
-        login(data.token);  // 로그인 상태 및 토큰 저장 처리
+        login(data.token);  //토큰 저장
+        localStorage.setItem('userId',data.userId);
         navigate('/board');
       })
       .catch(err => {

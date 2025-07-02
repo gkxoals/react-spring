@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function BoardUpdate() {
+function BoardCreate() {
   const [formData, setFormData] = useState({
     title: '',
     content: ''
@@ -16,14 +16,15 @@ function BoardUpdate() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const userId = localStorage.getItem('userId'); // 로그인 시 저장한 userId 가져오기
 
-    fetch('/board/update', {
+    fetch('/board/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData) // authorId 빼고!
     })
       .then(res => {
         if (!res.ok) throw new Error('글 작성 실패');
@@ -67,4 +68,4 @@ function BoardUpdate() {
   );
 }
 
-export default BoardUpdate;
+export default BoardCreate;

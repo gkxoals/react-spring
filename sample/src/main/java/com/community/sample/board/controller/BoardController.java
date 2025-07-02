@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+
+
 
 import java.util.List;
 import java.util.Map;
@@ -16,8 +19,16 @@ import java.util.Map;
 public class BoardController {
     private final BoardService boardService;
 
+//    @PostMapping("/create")
+//    public ResponseEntity<BoardDTO> create(@RequestBody BoardDTO boardDTO){
+//        BoardDTO createBoard = boardService.createBoard(boardDTO);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(createBoard);
+//    }
+
     @PostMapping("/create")
-    public ResponseEntity<BoardDTO> create(@RequestBody BoardDTO boardDTO){
+    public ResponseEntity<BoardDTO> create(@RequestBody BoardDTO boardDTO, Authentication authentication){
+        Long userId = (Long) authentication.getPrincipal();
+        boardDTO.setAuthorId(userId.intValue());
         BoardDTO createBoard = boardService.createBoard(boardDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createBoard);
     }
@@ -35,8 +46,7 @@ public class BoardController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BoardDTO> deleteBoard(@RequestBody Map<String, Long> request) {
-        Long id =request.get("id");
+    public ResponseEntity<Void> deleteBoard(@PathVariable Long id) {
         boardService.deleteBoard(id);
         return ResponseEntity.noContent().build();
     }

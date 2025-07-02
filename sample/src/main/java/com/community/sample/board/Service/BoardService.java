@@ -20,6 +20,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
+
+
     public BoardDTO createBoard(BoardDTO boardDTO) {
         // 1. DTO -> Entity 변환
         Board boardEntity = toEntity(boardDTO);
@@ -44,7 +46,7 @@ public class BoardService {
 
     private BoardDTO toDTO(Board entity) {
         BoardDTO dto = new BoardDTO();
-        dto.setAuthorId(entity.getBoard_Id());
+        dto.setAuthorId(entity.getAuthor().getUser_Id());
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         return dto;
@@ -75,7 +77,7 @@ public class BoardService {
         Board updatedBoard = boardRepository.save(board);
         return toDTO(updatedBoard);
     }
-    @Transactional(readOnly = true)
+    @Transactional
     public void deleteBoard(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Board not found with id: " + id));
